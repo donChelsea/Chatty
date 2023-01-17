@@ -4,14 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterActivity">
+    android:background="@color/black"
+    tools:context=".register.RegisterActivity">
 
     <EditText
         android:id="@+id/username"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="36dp"
-        android:ems="10"
+        android:padding="12dp"
+        android:background="@drawable/bg_rounded"
         android:inputType="textPersonName"
         android:hint="@string/username"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,7 +27,9 @@
         android:ems="10"
         android:inputType="textEmailAddress"
         android:hint="@string/email"
+        android:padding="12dp"
         android:layout_marginTop="16dp"
+        android:background="@drawable/bg_rounded"
         app:layout_constraintEnd_toEndOf="@+id/username"
         app:layout_constraintStart_toStartOf="@+id/username"
         app:layout_constraintTop_toBottomOf="@+id/username" />
@@ -35,9 +39,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:padding="12dp"
         android:inputType="textPassword"
         android:hint="@string/password"
         android:layout_marginTop="16dp"
+        android:background="@drawable/bg_rounded"
         app:layout_constraintEnd_toEndOf="@+id/email"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/email"
@@ -59,6 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
         android:text="@string/register"
+        android:background="@drawable/bg_rounded"
         app:layout_constraintEnd_toEndOf="@+id/password"
         app:layout_constraintStart_toStartOf="@+id/password"
         app:layout_constraintTop_toBottomOf="@+id/password" />
@@ -68,6 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:textColor="@color/white"
         android:text="@string/already_have_an_account"
         app:layout_constraintEnd_toEndOf="@+id/register"
         app:layout_constraintStart_toStartOf="@+id/register"
