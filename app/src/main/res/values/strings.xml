@@ -7,4 +7,7 @@
     <string name="register">Register</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="sign_in">Sign in</string>
+    <string name="error_enter_username">Please enter a username.</string>
+    <string name="error_enter_email">Please enter a valid email address.</string>
+    <string name="error_enter_password">Please enter a password with at least 6 characters.</string>
 </resources>
