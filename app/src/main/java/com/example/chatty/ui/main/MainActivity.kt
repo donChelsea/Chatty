@@ -1,4 +1,4 @@
-package com.example.chatty.ui
+package com.example.chatty.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

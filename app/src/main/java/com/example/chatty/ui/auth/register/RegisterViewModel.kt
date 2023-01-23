@@ -1,7 +1,7 @@
-package com.example.chatty.ui.register
+package com.example.chatty.ui.auth.register
 
-import android.net.Uri
 import androidx.lifecycle.ViewModel
+import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
@@ -32,14 +32,12 @@ class RegisterViewModel @Inject constructor(
                 auth.createUserWithEmailAndPassword(_state.value.email.toString(), _state.value.password.toString())
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            _state.update { it.copy(userCreated = true) }
                             uploadImage()
                             println("User created: ${task.result.user?.email}")
                             return@addOnCompleteListener
                         }
                     }
                     .addOnFailureListener { e ->
-                        _state.update { it.copy(userCreated = false) }
                         println("User couldn't be created: ${e.message}")
                     }
             }
@@ -87,7 +85,6 @@ data class RegisterUiState(
     val username: String? = null,
     val email: String? = null,
     val password: String? = null,
-    val userCreated: Boolean? = null,
     val imageUri: Uri? = null,
 )
 
