@@ -10,4 +10,6 @@
     <string name="error_enter_username">Please enter a username.</string>
     <string name="error_enter_email">Please enter a valid email address.</string>
     <string name="error_enter_password">Please enter a password with at least 6 characters.</string>
+    <string name="error_create_user">Couldn\'t create user :(</string>
+    <string name="select_photo">Select Photo</string>
 </resources>
