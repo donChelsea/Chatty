@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import com.example.chatty.R
 import com.example.chatty.databinding.FragmentNewMessageBinding
 import com.example.chatty.domain.User
@@ -28,6 +30,7 @@ class NewMessageFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentNewMessageBinding.inflate(inflater, container, false)
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = getString(R.string.select_user)
         return binding.root
     }
 
@@ -41,14 +44,19 @@ class NewMessageFragment : Fragment() {
                 state.users.forEach { user ->
                     adapter.add(UserItem(user))
                 }
+                adapter.setOnItemClickListener { item, view ->
+                    val userItem = item as UserItem
+                    val action = NewMessageFragmentDirections.actionNewMessageFragmentToChatFragment(userItem.user)
+                    view.findNavController().navigate(action)
+                }
+
                 binding.recyclerview.adapter = adapter
             }
         }
-
     }
 }
 
-class UserItem(private val user: User): Item<GroupieViewHolder>() {
+class UserItem(val user: User): Item<GroupieViewHolder>() {
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.findViewById<TextView>(R.id.user_name).text = user.username
         Picasso.get().load(user.imageUri).into(viewHolder.itemView.findViewById<ImageView>(R.id.user_image_circle))

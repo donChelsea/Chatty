@@ -37,10 +37,7 @@ class NewMessageViewModel @Inject constructor(
                 _state.update { it.copy(users = users) }
             }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
+            override fun onCancelled(error: DatabaseError) {}
         })
     }
 

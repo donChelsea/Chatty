@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.menu_sign_out -> {
                 auth.signOut()
-                val intent = Intent(this@MainActivity, MainActivity::class.java)
+                val intent = Intent(this@MainActivity, AuthActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }

@@ -15,4 +15,8 @@
     <string name="sign_out">Sign Out</string>
     <string name="im_sure">I\'m sure</string>
     <string name="never_mind">Never mind</string>
+    <string name="enter_message">Enter message</string>
+    <string name="send">Send</string>
+    <string name="select_user">Select user</string>
+    <string name="messages">Messages</string>
 </resources>
