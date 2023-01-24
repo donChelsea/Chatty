@@ -65,9 +65,16 @@ dependencies {
   implementation 'com.google.firebase:firebase-storage-ktx:20.1.0'
   implementation 'com.google.firebase:firebase-database-ktx:20.1.0'
 
+  // Groupie Recyclerview
+  implementation 'com.github.lisawray.groupie:groupie:2.10.0'
+  implementation "com.github.lisawray.groupie:groupie-viewbinding:2.10.0"
+
   // Navigation
   implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
   implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
+
+  // Picasso
+  implementation 'com.squareup.picasso:picasso:2.71828'
 
   // ViewModel
   implementation 'androidx.fragment:fragment-ktx:1.5.5'

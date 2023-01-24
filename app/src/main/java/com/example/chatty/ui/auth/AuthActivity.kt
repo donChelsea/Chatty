@@ -12,11 +12,5 @@ class AuthActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_auth) as NavHostFragment
-        val navController = navHostFragment.navController
-
     }
 }

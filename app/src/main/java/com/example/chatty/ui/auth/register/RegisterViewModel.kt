@@ -1,7 +1,8 @@
 package com.example.chatty.ui.auth.register
 
-import androidx.lifecycle.ViewModel
 import android.net.Uri
+import androidx.lifecycle.ViewModel
+import com.example.chatty.domain.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
@@ -87,5 +88,3 @@ data class RegisterUiState(
     val password: String? = null,
     val imageUri: Uri? = null,
 )
-
-class User(val uid: String, val username: String, val imageUri: String)
