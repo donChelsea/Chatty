@@ -7,7 +7,7 @@
     tools:context=".ui.main.chat.ChatFragment">
 
     <EditText
-        android:id="@+id/new_text"
+        android:id="@+id/message"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
@@ -27,18 +27,17 @@
         android:text="@string/send"
         android:layout_marginEnd="16dp"
         android:background="@drawable/bg_rounded"
-        app:layout_constraintBottom_toBottomOf="@+id/new_text"
+        app:layout_constraintBottom_toBottomOf="@+id/message"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/new_text"
-        app:layout_constraintTop_toTopOf="@+id/new_text" />
+        app:layout_constraintStart_toEndOf="@+id/message"
+        app:layout_constraintTop_toTopOf="@+id/message" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/purple_200"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@+id/new_text"
+        app:layout_constraintBottom_toTopOf="@+id/message"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

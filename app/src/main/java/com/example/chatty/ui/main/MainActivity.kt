@@ -21,7 +21,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        isUserLoggedIn()
+        println("auth" + auth.uid)
+
+        isUserLoggedIn()
     }
 
     private fun isUserLoggedIn() {

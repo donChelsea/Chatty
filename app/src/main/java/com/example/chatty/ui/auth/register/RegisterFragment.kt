@@ -20,7 +20,6 @@ import com.example.chatty.databinding.FragmentRegisterBinding
 import com.example.chatty.ui.main.MainActivity
 import com.example.chatty.util.isPasswordValid
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -86,17 +85,24 @@ class RegisterFragment : Fragment() {
                 view.findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
             }
 
-            lifecycleScope.launchWhenStarted {
-                viewModel.state.collectLatest { state ->
-                    register.setOnClickListener {
-                        if (state.username.isNullOrEmpty() && state.email.isNullOrEmpty() && state.password.isNullOrEmpty()) {
-                            return@setOnClickListener
-                        } else {
-                            viewModel.postEvent(RegistrationEvent.OnFinishRegistration)
-                            val intent = Intent(requireActivity(), MainActivity::class.java)
-                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            startActivity(intent)
-                        }
+            register.setOnClickListener {
+                performRegistration()
+            }
+
+        }
+    }
+
+    private fun performRegistration() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.state.collect { state ->
+                if (state.username.isNullOrEmpty() && state.email.isNullOrEmpty() && state.password.isNullOrEmpty()) {
+                    return@collect
+                } else {
+                    viewModel.postEvent(RegistrationEvent.OnFinishRegistration)
+                    if (state.userCreated == true) {
+                        val intent = Intent(requireActivity(), MainActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
                     }
                 }
             }

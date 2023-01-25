@@ -33,12 +33,14 @@ class RegisterViewModel @Inject constructor(
                 auth.createUserWithEmailAndPassword(_state.value.email.toString(), _state.value.password.toString())
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
+                            _state.update { it.copy(userCreated = true) }
                             uploadImage()
-                            println("User created: ${task.result.user?.email}")
+                            println("User created: ${task.result.user?.uid}")
                             return@addOnCompleteListener
                         }
                     }
                     .addOnFailureListener { e ->
+                        _state.update { it.copy(userCreated = false) }
                         println("User couldn't be created: ${e.message}")
                     }
             }
@@ -66,10 +68,10 @@ class RegisterViewModel @Inject constructor(
         val user = User(uid, _state.value.username.orEmpty(), url.toString())
         ref.setValue(user)
             .addOnSuccessListener {
-                println("User added to db")
+                println("user saved to db: ${user.uid}")
             }
             .addOnFailureListener {
-                println(it.message)
+                println("user couldn't be saved to db: ${user.uid}")
             }
     }
 }
@@ -87,4 +89,5 @@ data class RegisterUiState(
     val email: String? = null,
     val password: String? = null,
     val imageUri: Uri? = null,
+    val userCreated: Boolean? = null,
 )

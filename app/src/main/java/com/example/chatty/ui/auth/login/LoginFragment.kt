@@ -15,7 +15,6 @@ import com.example.chatty.databinding.FragmentLoginBinding
 import com.example.chatty.ui.main.MainActivity
 import com.example.chatty.util.isPasswordValid
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -53,7 +52,7 @@ class LoginFragment : Fragment() {
             }
 
             lifecycleScope.launchWhenStarted {
-                viewModel.state.collectLatest { state ->
+                viewModel.state.collect { state ->
                     signIn.setOnClickListener {
                         if (state.email.isNullOrEmpty() && state.password.isNullOrEmpty()) {
                             return@setOnClickListener
