@@ -59,6 +59,12 @@ class ChatViewModel @Inject constructor(
                 println("message saved to db: ${fromRef.key}")
             }
         toRef.setValue(chatMessage)
+
+        val recentMessageFromUserRef = database.getReference("/recent-messages/$fromId/$toId")
+        recentMessageFromUserRef.setValue(chatMessage)
+
+        val recentMessageToUserRef = database.getReference("/recent-messages/$toId/$fromId")
+        recentMessageToUserRef.setValue(chatMessage)
     }
 
     private fun listenForMessages() {
@@ -81,13 +87,9 @@ class ChatViewModel @Inject constructor(
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
-
             override fun onChildRemoved(snapshot: DataSnapshot) {}
-
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
-
             override fun onCancelled(error: DatabaseError) {}
-
         })
     }
 }
