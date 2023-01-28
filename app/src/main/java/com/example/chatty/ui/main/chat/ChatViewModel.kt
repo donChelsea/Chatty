@@ -33,6 +33,8 @@ class ChatViewModel @Inject constructor(
     private val _chattingEvents = MutableSharedFlow<ChattingEvent>()
     val chattingEvents: SharedFlow<ChattingEvent> = _chattingEvents.asSharedFlow()
 
+    private val fromId = auth.uid
+
     fun postEvent(event: ChatUiEvent) {
         when (event) {
             is ChatUiEvent.OnUpdateSelectedUser -> { _state.update { it.copy(toUser = event.user) } }
@@ -42,30 +44,27 @@ class ChatViewModel @Inject constructor(
     }
 
     private fun sendMessage(text: String) {
-        val fromId = auth.uid
         val toId = _state.value.toUser?.uid
-
-        if (fromId == null) {
-            println("fromId is null")
-            return
-        }
-
-        val ref = database.getReference("/messages").push()
+        val fromRef = database.getReference("/user-messages/$fromId/$toId").push()
+        val toRef = database.getReference("/user-messages/$toId/$fromId").push()
         val chatMessage = ChatMessage(
-            id = ref.key!!,
+            id = fromRef.key!!,
             text = text,
-            fromId = fromId,
+            fromId = fromId.toString(),
             toId = toId.toString(),
             timeStamp = System.currentTimeMillis() / 1000
         )
-        ref.setValue(chatMessage)
+        fromRef.setValue(chatMessage)
             .addOnSuccessListener {
-                println("message saved to db: ${ref.key}")
+                println("message saved to db: ${fromRef.key}")
             }
+        toRef.setValue(chatMessage)
     }
 
     private fun listenForMessages() {
-        val ref = database.getReference("/messages")
+        val toId = _state.value.toUser?.uid
+
+        val ref = database.getReference("/user-messages/$toId/$fromId")
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
