@@ -59,7 +59,7 @@ class NewMessageFragment : Fragment() {
 class UserItem(val user: User): Item<GroupieViewHolder>() {
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.findViewById<TextView>(R.id.user_name).text = user.username
-        Picasso.get().load(user.imageUri).into(viewHolder.itemView.findViewById<ImageView>(R.id.user_image_circle))
+        Picasso.get().load(user.imageUri).placeholder(R.mipmap.ic_launcher).into(viewHolder.itemView.findViewById<ImageView>(R.id.user_image_circle))
     }
 
     override fun getLayout() = R.layout.list_item_select_user

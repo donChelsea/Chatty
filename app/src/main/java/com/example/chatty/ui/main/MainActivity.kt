@@ -1,10 +1,11 @@
 package com.example.chatty.ui.main
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.example.chatty.R
 import com.example.chatty.ui.auth.AuthActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -21,8 +22,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        println("auth" + auth.uid)
-
         isUserLoggedIn()
     }
 
@@ -38,13 +37,27 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_sign_out -> {
+                showAlert()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun showAlert() {
+        val dialogBuilder = AlertDialog.Builder(this)
+        dialogBuilder.setMessage(getString(R.string.log_out_confirmation))
+            .setCancelable(false)
+            .setPositiveButton(getString(R.string.proceed)) { _, _ ->
                 auth.signOut()
                 val intent = Intent(this@MainActivity, AuthActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
-        }
-        return super.onOptionsItemSelected(item)
+            .setNegativeButton(getString(R.string.never_mind)) { dialog, _ ->
+                dialog.cancel()
+            }
+
+        dialogBuilder.create().show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

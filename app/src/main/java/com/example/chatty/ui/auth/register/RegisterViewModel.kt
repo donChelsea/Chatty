@@ -3,6 +3,7 @@ package com.example.chatty.ui.auth.register
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.example.chatty.domain.User
+import com.example.chatty.util.StringUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
@@ -30,7 +31,7 @@ class RegisterViewModel @Inject constructor(
             is RegistrationEvent.OnEnterPassword -> _state.update { it.copy(password = event.password) }
             is RegistrationEvent.OnSelectProfileImage -> _state.update { it.copy(imageUri = event.uri) }
             is RegistrationEvent.OnFinishRegistration -> {
-                auth.createUserWithEmailAndPassword(_state.value.email.toString(), _state.value.password.toString())
+                auth.createUserWithEmailAndPassword(_state.value.email, _state.value.password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             _state.update { it.copy(userCreated = true) }
@@ -40,7 +41,6 @@ class RegisterViewModel @Inject constructor(
                         }
                     }
                     .addOnFailureListener { e ->
-                        _state.update { it.copy(userCreated = false) }
                         println("User couldn't be created: ${e.message}")
                     }
             }
@@ -65,7 +65,7 @@ class RegisterViewModel @Inject constructor(
     private fun saveUserToDatabase(url: Uri) {
         val uid = auth.uid.orEmpty()
         val ref = database.getReference("/users/$uid")
-        val user = User(uid, _state.value.username.orEmpty(), url.toString())
+        val user = User(uid, _state.value.username, url.toString())
         ref.setValue(user)
             .addOnSuccessListener {
                 println("user saved to db: ${user.uid}")
@@ -85,9 +85,9 @@ sealed class RegistrationEvent {
 }
 
 data class RegisterUiState(
-    val username: String? = null,
-    val email: String? = null,
-    val password: String? = null,
+    val username: String = StringUtils.EMPTY,
+    val email: String = StringUtils.EMPTY,
+    val password: String = StringUtils.EMPTY,
     val imageUri: Uri? = null,
-    val userCreated: Boolean? = null,
+    val userCreated: Boolean = false,
 )

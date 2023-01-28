@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -21,7 +22,7 @@ class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
     private val viewModel by viewModels<LoginViewModel>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
         (requireActivity() as AppCompatActivity).supportActionBar?.title = getString(R.string.sign_in)
         return binding.root
@@ -51,16 +52,24 @@ class LoginFragment : Fragment() {
                 }
             }
 
-            lifecycleScope.launchWhenStarted {
-                viewModel.state.collect { state ->
-                    signIn.setOnClickListener {
-                        if (state.email.isNullOrEmpty() && state.password.isNullOrEmpty()) {
-                            return@setOnClickListener
-                        } else {
-                            val intent = Intent(requireActivity(), MainActivity::class.java)
-                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            startActivity(intent)
-                        }
+            signIn.setOnClickListener {
+                performLogin()
+            }
+        }
+    }
+
+    private fun performLogin() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.state.collect { state ->
+                if (state.email.isEmpty() && state.password.isEmpty()) {
+                    return@collect
+                } else {
+                    viewModel.postEvent(LoginEvent.FinishLogin(email = state.email, password = state.password))
+                    if (state.userLoggedIn) {
+                        Toast.makeText(requireContext(), "Logging in...", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(requireActivity(), MainActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
                     }
                 }
             }

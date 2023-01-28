@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -95,11 +96,12 @@ class RegisterFragment : Fragment() {
     private fun performRegistration() {
         lifecycleScope.launchWhenStarted {
             viewModel.state.collect { state ->
-                if (state.username.isNullOrEmpty() && state.email.isNullOrEmpty() && state.password.isNullOrEmpty()) {
+                if (state.username.isEmpty() && state.email.isEmpty() && state.password.isEmpty()) {
                     return@collect
                 } else {
                     viewModel.postEvent(RegistrationEvent.OnFinishRegistration)
-                    if (state.userCreated == true) {
+                    if (state.userCreated) {
+                        Toast.makeText(requireContext(), "Registering...", Toast.LENGTH_SHORT).show()
                         val intent = Intent(requireActivity(), MainActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                         startActivity(intent)
