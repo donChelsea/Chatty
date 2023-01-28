@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatty.domain.ChatMessage
 import com.example.chatty.domain.User
+import com.example.chatty.ui.main.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -34,7 +35,7 @@ class ChatViewModel @Inject constructor(
 
     fun postEvent(event: ChatUiEvent) {
         when (event) {
-            is ChatUiEvent.OnUpdateSelectedUser -> _state.update { it.copy(user = event.user) }
+            is ChatUiEvent.OnUpdateSelectedUser -> { _state.update { it.copy(toUser = event.user) } }
             is ChatUiEvent.OnSendMessage -> sendMessage(event.text)
             is ChatUiEvent.OnListenForMessages -> listenForMessages()
         }
@@ -42,8 +43,7 @@ class ChatViewModel @Inject constructor(
 
     private fun sendMessage(text: String) {
         val fromId = auth.uid
-        val user = _state.value.user
-        val toId = user?.uid
+        val toId = _state.value.toUser?.uid
 
         if (fromId == null) {
             println("fromId is null")
@@ -73,9 +73,9 @@ class ChatViewModel @Inject constructor(
                     println("new chat added: ${chat.text}")
                     viewModelScope.launch {
                         if (chat.fromId == auth.uid) {
-                            _chattingEvents.emit(ChattingEvent.OnToChat(chat.text))
+                            _chattingEvents.emit(ChattingEvent.OnToChat(chat.text, MainActivity.currentUser))
                         } else {
-                            _chattingEvents.emit(ChattingEvent.OnFromChat(chat.text))
+                            _chattingEvents.emit(ChattingEvent.OnFromChat(chat.text, _state.value.toUser))
                         }
                     }
                 }
@@ -94,7 +94,7 @@ class ChatViewModel @Inject constructor(
 }
 
 data class ChatUiState(
-    val user: User? = null,
+    val toUser: User? = null,
 )
 
 sealed class ChatUiEvent {
@@ -104,6 +104,6 @@ sealed class ChatUiEvent {
 }
 
 sealed class ChattingEvent {
-    data class OnFromChat(val text: String): ChattingEvent()
-    data class OnToChat(val text: String): ChattingEvent()
+    data class OnFromChat(val text: String, val fromUser: User?): ChattingEvent()
+    data class OnToChat(val text: String, val toUser: User?): ChattingEvent()
 }

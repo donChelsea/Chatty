@@ -7,6 +7,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chatty.R
+import com.example.chatty.domain.User
 import com.example.chatty.ui.auth.AuthActivity
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
@@ -14,6 +15,10 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+        var currentUser: User? = null
+    }
 
     @Inject
     lateinit var auth: FirebaseAuth

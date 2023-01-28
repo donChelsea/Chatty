@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -13,7 +14,10 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.chatty.R
 import com.example.chatty.databinding.FragmentChatBinding
+import com.example.chatty.domain.User
+import com.example.chatty.ui.main.MainActivity
 import com.example.chatty.util.hideKeyboard
+import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
@@ -60,25 +64,35 @@ class ChatFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.chattingEvents.collect { event ->
                 when (event) {
-                    is ChattingEvent.OnFromChat -> adapter.add(ChatFromItem(event.text))
-                    is ChattingEvent.OnToChat -> adapter.add(ChatToItem(event.text))
+                    is ChattingEvent.OnFromChat -> adapter.add(ChatFromItem(event.text, event.fromUser))
+                    is ChattingEvent.OnToChat -> {
+                        adapter.add(ChatToItem(event.text, MainActivity.currentUser))
+                    }
                 }
             }
         }
     }
 }
 
-class ChatFromItem(val text: String) : Item<GroupieViewHolder>() {
+class ChatFromItem(val text: String, val user: User?) : Item<GroupieViewHolder>() {
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.findViewById<TextView>(R.id.message).text = text
+        val messageTextview = viewHolder.itemView.findViewById<TextView>(R.id.message)
+        messageTextview.text = text
+
+        val imageView = viewHolder.itemView.findViewById<ImageView>(R.id.image_circle)
+        Picasso.get().load(user?.imageUri).placeholder(R.mipmap.ic_launcher).into(imageView)
     }
 
     override fun getLayout() = R.layout.list_item_chat_from
 }
 
-class ChatToItem(val text: String) : Item<GroupieViewHolder>() {
+class ChatToItem(val text: String, val user: User?) : Item<GroupieViewHolder>() {
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.findViewById<TextView>(R.id.message).text = text
+        val messageTextview = viewHolder.itemView.findViewById<TextView>(R.id.message)
+        messageTextview.text = text
+
+        val imageView = viewHolder.itemView.findViewById<ImageView>(R.id.image_circle)
+        Picasso.get().load(user?.imageUri).placeholder(R.mipmap.ic_launcher).into(imageView)
     }
 
     override fun getLayout() = R.layout.list_item_chat_to

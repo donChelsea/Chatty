@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import com.example.chatty.R
 import com.example.chatty.databinding.FragmentMessagesBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,6 +29,12 @@ class MessagesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.state.collect {
+                println("current user: ${it.currentUser?.username}")
+            }
+        }
 
         binding.apply {
             newMessageFab.setOnClickListener {
