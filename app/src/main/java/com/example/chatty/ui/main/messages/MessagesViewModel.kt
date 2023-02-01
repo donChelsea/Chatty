@@ -85,3 +85,7 @@ data class MessagesUiState(
 sealed class MessagesEvent {
     data class UpdateMessagesMap(val map: Map<String, ChatMessage>) : MessagesEvent()
 }
+
+sealed class MessagesUiEvent {
+    data class GetChatPartnerInfo(val chatMessage: ChatMessage) : MessagesUiEvent()
+}
