@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -18,6 +21,7 @@ import com.example.chatty.domain.ChatMessage
 import com.example.chatty.domain.User
 import com.example.chatty.ui.main.MainActivity
 import com.example.chatty.ui.main.new_message.UserItem
+import com.example.chatty.util.startAnimation
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -52,6 +56,25 @@ class MessagesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val animation = AnimationUtils.loadAnimation(requireContext(), R.anim.circle_explosion_anim).apply {
+            duration = 700
+            interpolator = AccelerateDecelerateInterpolator()
+        }
+
+        binding.apply {
+            newMessageFab.apply {
+                newMessageFab.setOnClickListener {
+                    visibility = View.INVISIBLE
+                    biggerCircle.visibility = View.VISIBLE
+                    biggerCircle.startAnimation(animation) {
+                        root.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.purple_500))
+                        biggerCircle.visibility = View.INVISIBLE
+                        view.findNavController().navigate(R.id.action_messagesFragment_to_newMessageFragment)
+                    }
+                }
+            }
+        }
+
         refreshMessages()
 
         groupieAdapter.setOnItemClickListener { item, view ->
@@ -66,10 +89,6 @@ class MessagesFragment : Fragment() {
             recyclerview.apply {
                 adapter = groupieAdapter
                 addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
-            }
-
-            newMessageFab.setOnClickListener {
-                view.findNavController().navigate(R.id.action_messagesFragment_to_newMessageFragment)
             }
         }
     }

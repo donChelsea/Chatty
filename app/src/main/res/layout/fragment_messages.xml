@@ -23,4 +23,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <View
+        android:id="@+id/bigger_circle"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:visibility="invisible"
+        android:background="@drawable/circle"
+        app:layout_constraintEnd_toEndOf="@id/new_message_fab"
+        app:layout_constraintStart_toStartOf="@id/new_message_fab"
+        app:layout_constraintBottom_toBottomOf="@id/new_message_fab"
+        app:layout_constraintTop_toTopOf="@id/new_message_fab"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
