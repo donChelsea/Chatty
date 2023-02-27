@@ -2,6 +2,7 @@ package com.example.chatty.ui.main.new_message
 
 import androidx.lifecycle.ViewModel
 import com.example.chatty.domain.User
+import com.example.chatty.ui.main.MainActivity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -30,9 +31,10 @@ class NewMessageViewModel @Inject constructor(
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.children.forEach { data ->
-                    println("User in db: $data")
                     val user = data.getValue(User::class.java)
-                    user?.let { it -> users.add(it) }
+                    if (user?.uid != MainActivity.currentUser?.uid) {
+                        user?.let { it -> users.add(it) }
+                    }
                 }
                 _state.update { it.copy(users = users) }
             }
